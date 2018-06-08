@@ -1,0 +1,5 @@
+export const INCREMENT = "INCREMENT";
+
+export const DECREMENT = "DECREMENT";
+
+export const GET_ARTICLE_DETAIL = "GET_ARTICLE_DETAIL";
