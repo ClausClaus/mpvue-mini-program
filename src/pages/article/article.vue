@@ -38,7 +38,7 @@ export default {
       wx.navigateTo({
         url: `/pages/article-detail/main?postId=${item.postId}`
       });
-      this.$store.commit("GET_ARTICLE_DETAIL",item);
+      this.$store.commit("GET_ARTICLE_DETAIL", item);
     }
   }
 };

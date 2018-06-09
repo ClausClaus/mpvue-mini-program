@@ -14,7 +14,7 @@ export default {
   },
   methods: {
     open() {
-      wx.redirectTo({
+      wx.switchTab({
         url: "/pages/article/main"
       });
     }

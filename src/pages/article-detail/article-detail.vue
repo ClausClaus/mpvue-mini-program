@@ -1,8 +1,8 @@
 <template>
   <view class="article-detail-container" :data-post_id="item.postId">
     <view class="image-header">
-      <image class="article-image" :src="item.imgSrc"/>
-      <image class="music-icon" :src="musicStatusImg"/>
+      <image class="article-image" :src="pagePlaying ? item.music.coverImgUrl : item.headImgSrc"/>
+      <image class="music-icon" @tap.stop="musicTap(item.music)" :src="pagePlaying ? '/static/images/music/music-stop.png ':'/static/images/music/music-start.png'"/>
     </view>
     <view class="author-info-wrap">
       <image class="author-avatar" :src="item.avatar"/>
@@ -12,7 +12,7 @@
     <view class="article-title">{{item.title}}</view>
     <view class="article-operate">
       <image class="operate-icon" @tap.stop="collectArticle" :src="collected ? '/static/images/icon/collection.png':'/static/images/icon/collection-anti.png'"/>
-      <image class="operate-icon" @tap.stop="toast"  src="/static/images/icon/share-anti.png"/>
+      <image class="operate-icon" @tap.stop="ShareTap"  src="/static/images/icon/share-anti.png"/>
     </view>
     <view class="article-content">
       {{item.detail}}
@@ -23,18 +23,25 @@
 <script>
 import { saveCollect, loadCollect } from "@/common/js/cache";
 export default {
-  components: {},
   data() {
     return {
-      collected: false
+      collected: false, // 文章是否已收藏
+      pagePlaying: false // 当前页面是否是正在播放歌曲的页面
     };
   },
   computed: {
+    isPlayingMusic() {
+      return this.$store.getters.isPlayingMusic;
+    },
     item() {
       return this.$store.getters.article;
+    },
+    currentMusicId() {
+      return this.$store.getters.currentMusicId;
     }
   },
   methods: {
+    // 点击收藏按钮
     collectArticle() {
       let collected = saveCollect(this.item.postId);
       this.collected = collected;
@@ -43,10 +50,70 @@ export default {
         duration: 1000,
         icon: "success"
       });
+    },
+    // 点击分享按钮
+    ShareTap() {
+      wx.showActionSheet({
+        itemList: ["分享给微信好友", "分享到朋友圈", "分享到QQ", "分享到微博"],
+        success: function(res) {
+          console.log(
+            "用户点击的按钮，从上到下的顺序，从0开始.res.tapIndex -->> ",
+            res.tapIndex
+          );
+        },
+        fail: function(res) {
+          console.log(res.errMsg);
+        }
+      });
+    },
+    // 控制音乐播放
+    musicTap(music) {
+      if (this.pagePlaying) {
+        wx.pauseBackgroundAudio();
+        this.pagePlaying = false;
+      } else {
+        wx.playBackgroundAudio({ ...music });
+        this.pagePlaying = true;
+      }
+      // console.log("点击之后的状态", this.pagePlaying);
+    },
+    // 监听音乐播放,这里是让自定义控制音乐的函数与小程序音乐的总控开关做桥接
+    setMusicMonitor() {
+      var _this = this;
+      wx.onBackgroundAudioPlay(function() {
+        _this.changeMusic(true, _this.item.postId);
+      });
+      wx.onBackgroundAudioPause(function() {
+        _this.changeMusic(false, null);
+      });
+      wx.onBackgroundAudioStop(function() {
+        _this.changeMusic(false, null);
+      });
+    },
+    // 控制程序与页面的播放状态
+    changeMusic(hasPlay, id) {
+      this.$store.commit("IS_PLAYING_MUSIC", hasPlay);
+      this.$store.commit("CURRENT_MUSIC_ID", id);
+      this.pagePlaying = hasPlay;
     }
   },
+
+  components: {},
   onLoad(options) {
-    this.collected = loadCollect(options.postId);
+    this.collected = loadCollect(options.postId); // 读取缓存
+    // 判断当前页面的音乐播放状态
+    // console.log("ID是否相等", this.currentMusicId, parseInt(options.postId));
+    // console.log("程序是否正在播放歌曲", this.isPlayingMusic);
+    if (
+      this.isPlayingMusic &&
+      this.currentMusicId === parseInt(options.postId)
+    ) {
+      this.pagePlaying = true;
+    } else {
+      this.pagePlaying = false;
+    }
+    // console.log("当前页面播放状态", this.pagePlaying);
+    this.setMusicMonitor();
   }
 };
 </script>

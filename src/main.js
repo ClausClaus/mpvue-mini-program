@@ -17,13 +17,34 @@ export default {
     pages: [
       "^pages/article/main",
       "pages/article-detail/main",
-      "pages/welcome/main"
+      "pages/welcome/main",
+      "pages/movices/main"
     ],
     window: {
       backgroundTextStyle: "light",
       navigationBarBackgroundColor: "#fff",
       navigationBarTitleText: "WeChat",
       navigationBarTextStyle: "black"
+    },
+    tabBar: {
+      borderStyle: "white",
+      position: "bottom",
+      selectedColor: "#1F4BA5",
+      color: "#707070",
+      list: [
+        {
+          pagePath: "pages/article/main",
+          text: "文章",
+          iconPath: "/static/images/tab/yuedu.png",
+          selectedIconPath: "/static/images/tab/yuedu_hl.png"
+        },
+        {
+          pagePath: "pages/movices/main",
+          text: "电影",
+          iconPath: "/static/images/tab/dianying.png",
+          selectedIconPath: "/static/images/tab/dianying_hl.png"
+        }
+      ]
     }
   }
 };
