@@ -1,7 +1,7 @@
 <script>
 export default {};
 
-// 这里对应App.js文件
+// 这个字段走App.js文件
 // App({
 //   onLaunch: function() {
 //     console.log("onLaunch");
