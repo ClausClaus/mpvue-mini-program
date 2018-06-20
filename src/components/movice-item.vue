@@ -1,7 +1,7 @@
 <template>
   <view class="movice-item">
-    <image class="movice-item-img" src="https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2395733377.jpg" />
-    <text class="movice-item-name">你的名字</text>
+    <image class="movice-item-img" :src="item.images.large"/>
+    <text class="movice-item-name">{{item.title}}</text>
     <star></star>
   </view>
 </template>
@@ -12,9 +12,18 @@ export default {
   data() {
     return {};
   },
+  props: {
+    item: {
+      type: Object,
+      default: () => {
+        return {};
+      }
+    }
+  },
   components: {
     Star
-  }
+  },
+  mounted() {}
 };
 </script>
 
