@@ -1,8 +1,8 @@
 <template>
-  <view class="movice-item">
-    <image class="movice-item-img" :src="item.images.large"/>
+  <view class="movice-item" :data-id="item.moviceId">
+    <image class="movice-item-img" :src="item.coverageUrl"/>
     <text class="movice-item-name">{{item.title}}</text>
-    <star></star>
+    <star :stars="item.stars" :score="item.average"></star>
   </view>
 </template>
 

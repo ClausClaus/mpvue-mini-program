@@ -18,21 +18,16 @@
 </template>
 
 <script>
-import { HTTP, flyInstance } from "@/api/base-request";
-import { ERROK } from "@/api/config";
+import { THEATERS, TOP250, COMINGSOON, SEARCHAPI } from "@/api/config";
+import { HTTP, flyInstance } from "@/api/base-request"; // 获取请求函数与fly实例
+import { normalLizeMovice } from "@/common/js/reset-movice";
 import MoviceList from "@/components/movice-list";
-const START = 0;
-const COUNT = 3;
-const TOP250 = `/v2/movie/top250`;
-const THEATERS = `/v2/movie/in_theaters`;
-const COMINGSOON = `/v2/movie/coming_soon`;
-const SEARCHAPI = `/v2/movie/search`;
 export default {
   data() {
     return {
-      Theaters: {},
-      Top250: {},
-      ComingSoon: {},
+      Theaters: { header: "正在热映" },
+      Top250: { header: "豆瓣Top250" },
+      ComingSoon: { header: "即将上映" },
       SearchList: {},
       Val: "",
       containerShow: true,
@@ -48,7 +43,6 @@ export default {
     onBindFocus() {},
     onBindChange() {},
     onCancelImgTap() {},
-
     getTheaters() {
       return HTTP(THEATERS)
         .then(res => {
@@ -77,37 +71,19 @@ export default {
         });
     }
   },
-  onload() {},
   created() {
     var _this = this;
     flyInstance
       .all([this.getTheaters(), this.getTop250(), this.getComingsoon()])
       .then(
         flyInstance.spread(function(Theaters, Top250, ComingSoon) {
-          _this.Theaters = Object.assign(
-            {},
-            { arr: Theaters.data.subjects },
-            {
-              header: "正在热映"
-            }
+          _this.$set(_this.Theaters, "arr", normalLizeMovice(Theaters.data));
+          _this.$set(_this.Top250, "arr", normalLizeMovice(Top250.data));
+          _this.$set(
+            _this.ComingSoon,
+            "arr",
+            normalLizeMovice(ComingSoon.data)
           );
-          _this.Top250 = Object.assign(
-            {},
-            { arr: Top250.data.subjects },
-            {
-              header: "Top250"
-            }
-          );
-          _this.ComingSoon = Object.assign(
-            {},
-            { arr: ComingSoon.data.subjects },
-            {
-              header: "即将上映"
-            }
-          );
-          console.log("Theaters", _this.Theaters);
-          console.log("Top250", _this.Top250);
-          console.log("ComingSoon", _this.ComingSoon);
         })
       )
       .catch(function(error) {

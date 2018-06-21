@@ -1,13 +1,13 @@
 <template>
   <view class="stars-container">
     <view class="stars">
-      <image class="star-item" src="/static/images/icon/star.png" />
-      <image class="star-item" src="/static/images/icon/star.png" />
-      <image class="star-item" src="/static/images/icon/star.png" />
-      <image class="star-item" src="/static/images/icon/star.png" />
-      <image class="star-item" src="/static/images/icon/star.png" />
+      <block v-for="(item,index) in stars" :key="index">
+        <image class="star-item" v-if="item === 'on'" src="/static/images/icon/star.png"/>
+        <image class="star-item" v-else-if="item === 'half'" src="/static/images/icon/half-star.png"/>
+        <image class="star-item" v-else-if="item === 'off'" src="/static/images/icon/none-star.png"/>
+       </block>
     </view>
-    <text class="score">6.9</text>
+    <text class="score">{{score}}</text>
   </view>
 </template>
 

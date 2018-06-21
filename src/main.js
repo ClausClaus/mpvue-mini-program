@@ -18,7 +18,8 @@ export default {
       "pages/article/main",
       "pages/article-detail/main",
       "pages/welcome/main",
-      "^pages/movices/main"
+      "pages/movices/main",
+      "^pages/more-movice/main"
     ],
     window: {
       backgroundTextStyle: "light",

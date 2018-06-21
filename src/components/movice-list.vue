@@ -2,9 +2,9 @@
   <view class="movice-list-container">
     <view class="movice-head">
       <view class="category-text">{{moviceData.header}}</view>
-      <view class="more-target">更多 <image class="arrow-img" src="/static/images/icon/arrow-right.png" /> </view>
+      <view class="more-target" @tap="onMoretap(moviceData.header)">更多 <image class="arrow-img" src="/static/images/icon/arrow-right.png" /> </view>
     </view>
-    <view v-if="moviceData.arr.length" class="movice-list">
+    <view class="movice-list">
       <movice-item v-for="(item,index) in moviceData.arr" :key="index"   :item="item"></movice-item>
     </view>
   </view>
@@ -27,7 +27,13 @@ export default {
   components: {
     MoviceItem
   },
-  mounted() {}
+  methods: {
+    onMoretap(category) {
+      wx.navigateTo({
+        url: `/pages/more-movice/main?category=${category}`
+      });
+    }
+  }
 };
 </script>
 
