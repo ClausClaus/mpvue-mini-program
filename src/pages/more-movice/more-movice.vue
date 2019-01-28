@@ -12,7 +12,7 @@ import moviceGrid from "@/components/movice-grid";
 export default {
   data() {
     return {
-      moviceList: []
+      moviceList: [],
     };
   },
   onLoad(options) {
@@ -28,17 +28,14 @@ export default {
       case "即将上映":
         url = COMINGSOON;
         break;
-      default:
-        url = THEATERS;
-        break;
     }
-    HTTP(url, { count: 23 })
-      .then(res => {
-        this.moviceList = normalLizeMovice(res.data);
-        console.log(this.moviceList);
+    this.$store.commit("URL", url);
+    this.$store
+      .dispatch("moviceRequest", {
+        params: { count: 18 }
       })
-      .catch(err => {
-        console.log(err);
+      .then(list => {
+        this.moviceList = list;
       });
   },
   components: {
@@ -46,7 +43,7 @@ export default {
   },
   onReady() {
     wx.setNavigationBarTitle({
-      title: this.categoryTitle || '测试'
+      title: this.categoryTitle || "测试"
     });
   }
 };
